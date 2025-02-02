@@ -28,4 +28,9 @@ O **front-end** é baseado em **Razor Pages**, consumindo os dados da API e ofer
 
 ---
 
+## 📬 Contato
+📧 Email: osamuelrocha@gmail.com
+🔗 LinkedIn: [Samuel Rocha](https://www.linkedin.com/in/samuel-rocha-b74b7959/)
 
+🚀 Desenvolvido por Samuel Rocha
+🎯 System Architect | Software Engineer
