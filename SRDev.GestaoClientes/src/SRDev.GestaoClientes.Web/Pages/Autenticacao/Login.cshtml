@@ -1,0 +1,24 @@
+﻿@page
+@model SRDev.GestaoClientes.Web.Pages.Autenticacao.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form method="post">
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" name="Email" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label for="senha" class="form-label">Senha</label>
+        <input type="password" id="senha" name="Senha" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Entrar</button>
+</form>

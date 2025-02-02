@@ -1,0 +1,71 @@
+﻿@page
+@model SRDev.GestaoClientes.Web.Pages.Clientes.IndexModel
+
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+}
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
+}
+
+<h2>Lista de Clientes</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Logotipo</th>
+            <th>Nome</th>
+            <th>Email</th>           
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cliente in Model.Clientes)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(cliente.Logotipo))
+                    {
+                        <img src="@cliente.Logotipo" alt="Logotipo de @cliente.Nome" class="img-thumbnail" style="max-width: 50px; height: auto;" />
+                    }
+                    else
+                    {
+                        <span class="text-muted">Sem logotipo</span>
+                    }
+                </td>
+                <td>@cliente.Nome</td>
+                <td>@cliente.Email</td>
+                <td>
+                    <a asp-page="/Clientes/Detalhes" asp-route-id="@cliente.Id" class="btn btn-info btn-sm">Detalhes</a>
+                    <a asp-page="/Clientes/Editar" asp-route-id="@cliente.Id" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-page="/Clientes/Excluir" asp-route-id="@cliente.Id" class="btn btn-danger btn-sm">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Paginação -->
+<nav>
+    <ul class="pagination">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Anterior</a>
+            </li>
+        }
+        <li class="page-item active">
+            <span class="page-link">@Model.PageNumber</span>
+        </li>
+        <li class="page-item">
+            <a class="page-link" asp-page="./Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Próximo</a>
+        </li>
+    </ul>
+</nav>

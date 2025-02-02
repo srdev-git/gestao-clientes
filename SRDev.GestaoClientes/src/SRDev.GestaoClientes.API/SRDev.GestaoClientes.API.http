@@ -1,0 +1,6 @@
+@SRDev.GestaoClientes.API_HostAddress = http://localhost:5240
+
+GET {{SRDev.GestaoClientes.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

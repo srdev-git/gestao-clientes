@@ -1,0 +1,59 @@
+﻿@page "{id}"
+@model DetalhesModel
+@{
+    ViewData["Title"] = "Detalhes do Cliente";
+}
+
+<h2>Detalhes do Cliente</h2>
+
+@if (Model.Cliente != null)
+{
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">@Model.Cliente.Nome</h4>
+            <p class="card-text"><strong>Email:</strong> @Model.Cliente.Email</p>
+
+            <h5>Logotipo</h5>
+            @if (!string.IsNullOrEmpty(Model.Cliente.Logotipo))
+            {
+                <img src="@Model.Cliente.Logotipo" alt="Logotipo" class="img-fluid mb-2" style="max-width: 200px;" />
+            }
+            else
+            {
+                <p class="text-muted">Nenhuma logotipo cadastrada.</p>
+            }
+
+            <!-- Formulário para Upload da Logotipo -->
+            <form method="post" enctype="multipart/form-data" asp-page-handler="UploadLogotipo">
+                <input type="hidden" asp-for="Cliente.Id" />
+                <div class="mb-3">
+                    <input type="file" name="logotipoFile" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Logotipo</button>
+            </form>
+
+            @if (!string.IsNullOrEmpty(Model.MensagemSucesso))
+            {
+                <div class="alert alert-success mt-2">@Model.MensagemSucesso</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.MensagemErro))
+            {
+                <div class="alert alert-danger mt-2">@Model.MensagemErro</div>
+            }
+        </div>
+    </div>
+
+    <h3>Endereços</h3>
+    <ul class="list-group">
+        @foreach (var logradouro in Model.Cliente.Logradouros)
+        {
+            <li class="list-group-item">@logradouro.Endereco</li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-danger">Erro ao carregar os detalhes do cliente.</p>
+}
+
+<a asp-page="/Clientes/Index" class="btn btn-secondary mt-3">Voltar</a>

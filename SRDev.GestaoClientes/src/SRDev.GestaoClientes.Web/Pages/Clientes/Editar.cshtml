@@ -1,0 +1,108 @@
+﻿@page "{id:guid}"
+@model SRDev.GestaoClientes.Web.Pages.Clientes.EditarModel
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<h2>Editar Cliente</h2>
+
+@if (!string.IsNullOrEmpty(Model.MensagemErro))
+{
+    <div class="alert alert-danger">@Model.MensagemErro</div>
+}
+
+<form method="post" id="form-editar-cliente">
+    <input type="hidden" asp-for="Cliente.Id" />
+
+    <div class="mb-3">
+        <label asp-for="Cliente.Nome" class="form-label">Nome</label>
+        <input asp-for="Cliente.Nome" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Cliente.Email" class="form-label">Email</label>
+        <input asp-for="Cliente.Email" type="email" class="form-control" required />
+    </div>
+
+    <h3>Endereços</h3>
+    <table class="table" id="tabela-logradouros">
+        <thead>
+            <tr>
+                <th>Endereço</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Cliente.Logradouros.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input type="text" name="Cliente.Logradouros[@i].Endereco" value="@Model.Cliente.Logradouros[i].Endereco" class="form-control" required />
+                        <input type="hidden" name="Cliente.Logradouros[@i].Id" value="@Model.Cliente.Logradouros[i].Id" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm btn-remover" data-index="@i">Remover</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Campos ocultos dentro do form -->
+    <div id="enderecos-hidden"></div>
+
+    <button type="button" id="btn-adicionar" class="btn btn-success btn-sm">Adicionar Endereço</button>
+    <br /><br />
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-page="/Clientes/Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Atualiza os campos ocultos antes de submeter o formulário
+            $("#form-editar-cliente").on("submit", function () {
+                atualizarCamposOcultos();
+            });
+
+            function atualizarCamposOcultos() {
+                $("#enderecos-hidden").empty();
+
+                $("#tabela-logradouros tbody tr").each(function (i) {
+                    var id = $(this).find("input[name^='Cliente.Logradouros'][name$='.Id']").val();
+                    var endereco = $(this).find("input[name^='Cliente.Logradouros'][name$='.Endereco']").val();
+
+                    if (endereco !== undefined && endereco.trim() !== "") {
+                        $("#enderecos-hidden").append(`
+                                    <input type="hidden" name="Cliente.Logradouros[${i}].Id" value="${id}" />
+                                    <input type="hidden" name="Cliente.Logradouros[${i}].Endereco" value="${endereco}" />
+                                `);
+                    }
+                });
+            }
+
+            // Adicionar endereço dinamicamente
+            $("#btn-adicionar").on("click", function () {
+                var index = $("#tabela-logradouros tbody tr").length;
+                $("#tabela-logradouros tbody").append(`
+                            <tr>
+                                <td>
+                                    <input type="text" name="Cliente.Logradouros[${index}].Endereco" class="form-control" required />
+                                    <input type="hidden" name="Cliente.Logradouros[${index}].Id" value="00000000-0000-0000-0000-000000000000" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm btn-remover" data-index="${index}">Remover</button>
+                                </td>
+                            </tr>
+                        `);
+            });
+
+            // Remover endereço dinamicamente
+            $(document).on("click", ".btn-remover", function () {
+                $(this).closest("tr").remove();
+                atualizarCamposOcultos();
+            });
+        });
+    </script>
+}
