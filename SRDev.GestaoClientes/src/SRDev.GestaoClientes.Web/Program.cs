@@ -8,9 +8,11 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+
+var apiBaseUrl = builder.Configuration.GetValue<string>("ClienteApiBaseUrl");
 builder.Services.AddHttpClient<ClienteService>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5240/");
+    client.BaseAddress = new Uri(apiBaseUrl);
 });
 
 builder.Services.AddScoped<AutenticacaoService>();
